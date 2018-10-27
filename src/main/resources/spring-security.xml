@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <!-- 页面拦截规则 -->
+    <!-- 以下页面不被拦截 -->
+    <http pattern="/login.html" security="none"></http>
+    <http pattern="/error.html" security="none"></http>
+
+
+    <!-- use-expressions:禁用spel表达式, 这个表达式写起来较复杂所以禁用 -->
+    <http use-expressions="false">
+        <!-- pattern: url路径, access: 访问这个路径所需具有的权限 -->
+        <intercept-url pattern="/**" access="ROLE_USER" />
+        <!--
+            login-page :指定使用的登录页面位置
+            default-target-url: 指定登录成功后跳转的首页位置
+            authentication-failure-url:指定登录失败后跳转的页面位置
+         -->
+        <form-login login-page="/login.html" default-target-url="/index.html" authentication-failure-url="/error.html"/>
+        <!-- 关闭csrf验证 -->
+        <csrf disabled="true"/>
+
+    </http>
+
+    <!-- 认证管理器 -->
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="admin" password="123456" authorities="ROLE_USER"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
